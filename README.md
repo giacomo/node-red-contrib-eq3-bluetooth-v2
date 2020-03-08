@@ -1,6 +1,4 @@
-forked from https://github.com/Heckie75/eQ-3-radiator-thermostat
-
-# eq3-Bridge
+# node-red-contrib-eq3-bluetooth-v2
 To run execute:
 `node index.js`
 
