@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    RED.nodes.registerType('eq3-bluetooth',{
+        category: 'input',
+        color: '#FFFFAA',
+        defaults: {
+            name: { value: '', required: true},
+            mac: { value: '', required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'bluetooth.png',
+        label: function() {
+            return this.name || this.mac || 'eq3-bluetooth';
+        },
+        align: 'left'
+    });
+</script>
+
+<script type="text/x-red" data-template-name="eq3-bluetooth">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input id="node-input-name"></input>
+  </div>
+  <div class="form-row">
+    <label for="node-input-mac"><i class="icon-tag"></i> Mac-Address</label>
+    <input id="node-input-mac"></input>
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="eq3-bluetooth">
+    <p> node to configure and query data from eq3-bluetooth device</p>
+</script>

@@ -1,12 +1,10 @@
 'use strict';
-
 const eq3device = require('./eq3-device');
 
 module.exports = function(RED) {
-    function eq3(config) {
+    function Eq3BluetoothNode(config) {
         var node = this;
         RED.nodes.createNode(this, config);
-        this.serverConfig = RED.nodes.getNode(config.server);
 
         if (!node.device) {
             node.device = new eq3device(config.mac);
@@ -15,6 +13,13 @@ module.exports = function(RED) {
         node.intervalId = setInterval(() => {
             if(node.device) {
                 node.status({fill:"green",shape:"ring",text:"connected"});
+                node.device.getInfo()
+                    .then(res => {
+                        const msg = {
+                            payload: res
+                        };
+                        node.send(msg);
+                    })
             } else {
                 node.status({fill:"red",shape:"ring",text:"disconnected"});
             }
@@ -26,15 +31,8 @@ module.exports = function(RED) {
         });
 
         node.on('input', function(msg) {
+            console.log(msg);
             node.setCommand = () => {
-                setTimeout(() => {
-                    node.device.getInfo()
-                        .then(a => {
-                            msg.payload = a;
-                            node.send(msg)
-                        })
-                }, 2000);
-
                 if (typeof msg.payload !== 'object') {
                     return;
                 }
@@ -94,5 +92,5 @@ module.exports = function(RED) {
             }
         });
     }
-    RED.nodes.registerType("eq3-bluetooth-v2", eq3);
+    RED.nodes.registerType("eq3-bluetooth", Eq3BluetoothNode);
 };

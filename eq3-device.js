@@ -1,19 +1,25 @@
 const shell = require('shelljs');
+const path = require('path');
 
 module.exports = class Eq3Device {
     constructor(macAddress) {
         this.macAddress = macAddress;
     }
 
+    getExecutable() {
+        return path.join(__dirname, 'eq3.exp');
+    }
+
     getInfo() {
-        const command = `./eq3.exp ${this.macAddress} json`;
+        const command = `expect ${this.getExecutable()} ${this.macAddress} json`;
         const response = shell.exec(command).stdout;
-        return response;
+        const json = JSON.parse(response);
+        return Promise.resolve(json);
     }
 
     setTemp(temp) {
-        const command = `./eq3.exp ${macAddress} temp ${temp}`;
+        const command = `expect ${this.getExecutable()} ${this.macAddress} temp ${temp}`;
         const response = shell.exec(command).stdout;
-        return response;
+        return Promise.resolve(JSON.parse(response));
     }
 };

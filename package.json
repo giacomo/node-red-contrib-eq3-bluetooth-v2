@@ -25,5 +25,10 @@
   "homepage": "https://github.com/giacomo/node-red-contrib-eq3-bluetooth-v2#readme",
   "dependencies": {
     "shelljs": "^0.8.3"
+  },
+  "node-red": {
+    "nodes": {
+      "eq3-bluetooth": "eq3-bluetooth.js"
+    }
   }
 }
