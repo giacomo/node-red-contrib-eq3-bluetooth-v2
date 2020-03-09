@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/giacomo/node-red-contrib-eq3-bluetooth-v2#readme",
   "dependencies": {
+    "@abandonware/noble": "^1.9.2-7",
+    "array-buffer-to-hex": "^1.0.0",
     "shelljs": "^0.8.3"
   },
   "node-red": {
