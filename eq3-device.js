@@ -4,6 +4,7 @@ const path = require('path');
 module.exports = class Eq3Device {
     constructor(macAddress) {
         this.macAddress = macAddress;
+        this.requestIsRunning = false;
     }
 
     getExecutable() {
@@ -11,15 +12,25 @@ module.exports = class Eq3Device {
     }
 
     getInfo() {
-        const command = `expect ${this.getExecutable()} ${this.macAddress} json`;
+        this.requestIsRunning = true;
+
+        const command = `${this.getExecutable()} ${this.macAddress} mini-json`;
         const response = shell.exec(command).stdout;
-        const json = JSON.parse(response);
-        return Promise.resolve(json);
+
+        return this.getPromiseResponse(response);
     }
 
     setTemp(temp) {
-        const command = `expect ${this.getExecutable()} ${this.macAddress} temp ${temp}`;
+        this.requestIsRunning = true;
+
+        const command = `${this.getExecutable()} ${this.macAddress} temp ${temp}`;
         const response = shell.exec(command).stdout;
+
+        return this.getPromiseResponse(response);
+    }
+
+    getPromiseResponse(response) {
+        this.requestIsRunning = false;
         return Promise.resolve(JSON.parse(response));
     }
 };

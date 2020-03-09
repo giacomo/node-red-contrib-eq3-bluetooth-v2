@@ -92,6 +92,8 @@ status                                         - Syncs time, Prints target tempe
 \                                                 (in debug mode also last command even of official app, set log_user to 1 in code!)"
 set HELP(json) "\
 json                                           - Same as status but in json format"
+set HELP(mini-json) "\
+mini-json                                      - Minified status in json format"
 set HELP(reset) "\
   reset                                          - Factory reset"
 
@@ -214,6 +216,7 @@ proc help {} {
   puts $HELP(serial)
   puts $HELP(status)
   puts $HELP(json)
+  puts $HELP(mini-json)
   puts $HELP(clear)
   puts $HELP(reset)
   puts ""
@@ -637,6 +640,32 @@ proc toJson {} {
     append out "\n"
   }
   append out "  \}\n"
+  append out "\}"
+
+  puts $out
+}
+
+proc toMiniJson {} {
+  global REQUESTS
+  global thermostat
+
+  set connected [connect]
+
+
+  if { $connected != 0} {
+    puts "\{ \"error\" : \"Connection failed.\" \}"
+    exit -1
+  }
+
+  set currentTime [currentTime]
+  set currentDate [currentDate]
+  set raw_status [writeRequest $REQUESTS(setTime) "[dateToHex $currentDate][timeToHex $currentTime]"]
+  parseMode $raw_status
+
+  append out "\{\n"
+  append out "  \"mac\" : \"$thermostat(mac)\",\n"
+  append out "  \"temperature\" : $thermostat(temperature),\n"
+  append out "  \"valve\" : $thermostat(valve),\n"
   append out "\}"
 
   puts $out
@@ -1149,6 +1178,9 @@ proc doCommand {} {
     }
     ^json$ {
       toJson
+    }
+    ^mini-json$ {
+      toMiniJson
     }
     ^status$ {
       init [expr $INIT(device) + $INIT(mode) + $INIT(timer) + $INIT(serial)]

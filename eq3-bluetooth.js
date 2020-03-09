@@ -3,7 +3,7 @@ const eq3device = require('./eq3-device');
 
 module.exports = function(RED) {
     function Eq3BluetoothNode(config) {
-        var node = this;
+        const node = this;
         RED.nodes.createNode(this, config);
 
         if (!node.device) {
@@ -13,13 +13,16 @@ module.exports = function(RED) {
         node.intervalId = setInterval(() => {
             if(node.device) {
                 node.status({fill:"green",shape:"ring",text:"connected"});
-                node.device.getInfo()
-                    .then(res => {
-                        const msg = {
-                            payload: res
-                        };
-                        node.send(msg);
-                    })
+                if (!node.device.requestInRunning) {
+                    node.device.getInfo()
+                        .then(res => {
+                            const msg = {
+                                payload: res
+                            };
+                            node.send(msg);
+                        })
+                }
+
             } else {
                 node.status({fill:"red",shape:"ring",text:"disconnected"});
             }
